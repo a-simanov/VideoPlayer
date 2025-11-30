@@ -51,13 +51,6 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="btn_choose">
-          <property name="text">
-           <string>Открыть файл</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
       <item>
@@ -67,6 +60,28 @@
     </item>
    </layout>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>632</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_context">
+    <property name="title">
+     <string>Меню</string>
+    </property>
+    <addaction name="action_open_file"/>
+   </widget>
+   <addaction name="menu_context"/>
+  </widget>
+  <action name="action_open_file">
+   <property name="text">
+    <string>Открыть файл</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

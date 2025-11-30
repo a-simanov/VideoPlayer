@@ -3,16 +3,24 @@
 
 #include <QFileDialog>
 
+
+int MILLISECONDS_IN_HOUR = 3600000;
+int MILLISECONDS_IN_MINUTE = 60000;
+int MILLISECONDS_IN_SECOND = 1000;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     ui->label->hide();
+    ui->menuBar->hide();
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(&player_, &QMediaPlayer::positionChanged, this, &MainWindow::on_position_changed);
     connect(&player_, &QMediaPlayer::mediaStatusChanged, this, &MainWindow::on_media_status_changed);
     connect(&player_, &QMediaPlayer::playbackStateChanged, this, &MainWindow::on_playback_state_changed);
+    connect(ui->action_open_file, &QAction::triggered, this, &MainWindow::openFileDialog);
+    connect(this, &QMainWindow::customContextMenuRequested, this, &MainWindow::slotCustomMenuRequested);
 
     player_.setVideoOutput(ui->video_output);
     player_.setAudioOutput(&audio_output_);
@@ -23,12 +31,12 @@ void MainWindow::on_position_changed(qint64 position) {
     position_changing_ = true;
     ui->sld_pos->setValue(position);
     QString time_form("%1:%2:%3/%4:%5:%6");
-    QString time_text = time_form.arg(position / 3600000, 2, 10,QChar('0'))
-                            .arg(position / 60000, 2, 10,QChar('0'))
-                            .arg(position / 1000, 2, 10,QChar('0'))
-                            .arg(dur_ / 3600000, 2, 10,QChar('0'))
-                            .arg(dur_ / 60000, 2, 10,QChar('0'))
-                            .arg(dur_ / 1000, 2, 10,QChar('0'));
+    QString time_text = time_form.arg(position / MILLISECONDS_IN_HOUR, 2, 10,QChar('0'))
+                            .arg(position / MILLISECONDS_IN_MINUTE, 2, 10,QChar('0'))
+                            .arg(position / MILLISECONDS_IN_SECOND, 2, 10,QChar('0'))
+                            .arg(dur_ / MILLISECONDS_IN_HOUR, 2, 10,QChar('0'))
+                            .arg(dur_ / MILLISECONDS_IN_MINUTE, 2, 10,QChar('0'))
+                            .arg(dur_ / MILLISECONDS_IN_SECOND, 2, 10,QChar('0'));
     ui->label->setText(time_text);
     position_changing_ = false;
 
@@ -50,8 +58,7 @@ void MainWindow::on_playback_state_changed(QMediaPlayer::PlaybackState new_state
     }
 }
 
-void MainWindow::on_btn_choose_clicked()
-{
+void MainWindow::openFileDialog () {
     QString fileName = QFileDialog::getOpenFileName(
         this,
         QString("Открыть файл"),
@@ -61,7 +68,10 @@ void MainWindow::on_btn_choose_clicked()
 
     player_.setSource(QUrl::fromLocalFile(fileName));
     player_.play();
+}
 
+void MainWindow::slotCustomMenuRequested(QPoint pos) {
+    ui->menu_context->popup(this->mapToGlobal(pos));
 }
 
 void MainWindow::on_btn_pause_clicked()    
