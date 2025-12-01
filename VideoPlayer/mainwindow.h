@@ -20,9 +20,9 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_position_changed(qint64 position);
-    void on_media_status_changed(QMediaPlayer::MediaStatus status);
-    void on_playback_state_changed(QMediaPlayer::PlaybackState newState);
+    void position_changed(qint64 position);
+    void media_status_changed(QMediaPlayer::MediaStatus status);
+    void playback_state_changed(QMediaPlayer::PlaybackState newState);
     void on_btn_pause_clicked();
     void on_sld_volume_valueChanged(int value);
     void on_sld_pos_valueChanged(int value);

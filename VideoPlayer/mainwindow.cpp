@@ -16,9 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->label->hide();
     ui->menuBar->hide();
     this->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(&player_, &QMediaPlayer::positionChanged, this, &MainWindow::on_position_changed);
-    connect(&player_, &QMediaPlayer::mediaStatusChanged, this, &MainWindow::on_media_status_changed);
-    connect(&player_, &QMediaPlayer::playbackStateChanged, this, &MainWindow::on_playback_state_changed);
+    connect(&player_, &QMediaPlayer::positionChanged, this, &MainWindow::position_changed);
+    connect(&player_, &QMediaPlayer::mediaStatusChanged, this, &MainWindow::media_status_changed);
+    connect(&player_, &QMediaPlayer::playbackStateChanged, this, &MainWindow::playback_state_changed);
     connect(ui->action_open_file, &QAction::triggered, this, &MainWindow::openFileDialog);
     connect(this, &QMainWindow::customContextMenuRequested, this, &MainWindow::slotCustomMenuRequested);
 
@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     audio_output_.setVolume(1.f);
 }
 
-void MainWindow::on_position_changed(qint64 position) {
+void MainWindow::position_changed(qint64 position) {
     position_changing_ = true;
     ui->sld_pos->setValue(position);
     QString time_form("%1:%2:%3/%4:%5:%6");
@@ -39,10 +39,9 @@ void MainWindow::on_position_changed(qint64 position) {
                             .arg(dur_ / MILLISECONDS_IN_SECOND, 2, 10,QChar('0'));
     ui->label->setText(time_text);
     position_changing_ = false;
-
 }
 
-void MainWindow::on_media_status_changed(QMediaPlayer::MediaStatus) {
+void MainWindow::media_status_changed(QMediaPlayer::MediaStatus) {
     dur_ =  player_.duration();
     ui->label->show();
     ui->sld_pos->setMaximum(dur_);
@@ -50,7 +49,7 @@ void MainWindow::on_media_status_changed(QMediaPlayer::MediaStatus) {
     ui->sld_volume->setValue(100);
 }
 
-void MainWindow::on_playback_state_changed(QMediaPlayer::PlaybackState new_state) {
+void MainWindow::playback_state_changed(QMediaPlayer::PlaybackState new_state) {
     if (new_state == QMediaPlayer::PlaybackState::PlayingState) {
         ui->btn_pause->setText("⏸");
     } else {

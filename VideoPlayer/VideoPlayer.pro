@@ -2,11 +2,7 @@ QT += core gui widgets multimedia openglwidgets multimediawidgets
 
 CONFIG += c++17
 
-isEmpty(MOCK_LIB) {
-    MOCK_LIB=/tmp/practicum-qt-mocks
-}
-
-INCLUDEPATH += $$MOCK_LIB
+INCLUDEPATH += /usr/include/libcamera
 
 SOURCES += \
     main.cpp \
